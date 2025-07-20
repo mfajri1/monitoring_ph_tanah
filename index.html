@@ -1,0 +1,146 @@
+<?php 
+
+	include "pages/transaksi/vPhp.php";
+
+	$queryUpdt = "UPDATE ta_mode SET status='Transaksi', jenis='Scan RFID' WHERE id_status='1'";
+	$resultUpdt = $koneksi->query($queryUpdt);	
+
+	$page = 1;
+    if (isset($_GET['page']) && !empty($_GET['page']))
+        $page = (int)$_GET['page'];
+
+    /* untuk mengetahui berapa banyak data yang akan ditampilkan
+    juga untuk men-set nilai default menjadi 5 jika tidak ada
+    data $_GET['perPage'] yang dikirimkan*/
+    $dataPerPage = 5;
+    if (isset($_GET['perPage']) && !empty($_GET['perPage']))
+        $dataPerPage = (int)$_GET['perPage'];
+
+    // tabel yang akan diambil datanya
+    $table = 'ta_transaksi_posyandu';
+    // ambil data
+    $dataTable = getTableData($koneksi, $page, $dataPerPage);
+
+?>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+    	<div class="row">
+    		<div class="col-md-9">
+    			<h6 class="m-0 font-weight-bold text-primary">Kasir</h6>		
+    		</div>
+    	</div>
+    </div>
+   
+		<div class="card-body">
+			<form id="formInput" type="POST">
+		    	<div class="row">
+		    		<div class="col-md-2">
+		    			<input type="hidden" name="jenisProses" value="inputDataTransaksi">
+		    			<label for="transaksi_kode" class="control-label font-weight-bolder">Kode Transaksi <span class="text-danger">*</span></label>
+						<input type="text" class="form-control form-control-sm" name="transaksi_kode" id="transaksi_kode" placeholder="Kode Transaksi"  required readonly>
+						<div class="invalid-feedback"></div>
+		    		</div>
+		    		<div class="col-md-2">
+		    			<label for="transaksi_tanggal" class="control-label font-weight-bolder">Tanggal Transaksi <span class="text-danger">*</span></label>
+						<input type="date" class="form-control form-control-sm" name="transaksi_tanggal" id="transaksi_tanggal" placeholder="Tanggal Transaksi"  required>
+						<div class="invalid-feedback"></div>
+		    		</div>
+		    		<div class="col-md-6" id="load_rfid">
+		    			<div class="row">
+		    				<div class="col-md-3" >
+				    			<label for="nikBayi" class="control-label font-weight-bolder">NIK</label>
+					            <input type="text" class="form-control form-control-sm" name="nikBayi" id="nikBayi" placeholder="NIK"  required>
+					            <div class="invalid-feedback"></div>
+				    		</div>
+				    		<div class="col-md-3">
+				    			<label for="berat" class="control-label font-weight-bolder">Berat</label>
+								<input type="text" class="form-control form-control-sm" name="berat" id="berat" placeholder="Berat"  required>
+								<input type="hidden" name="nomor" id="nomor" value="0">
+								<div class="invalid-feedback"></div>
+				    		</div>
+				    		<div class="col-md-2">
+				    			<label for="panjang" class="control-label font-weight-bolder">Panjang</label>
+								<input type="text" class="form-control form-control-sm" name="panjang" id="panjang" placeholder="Panjang"  required>
+								<div class="invalid-feedback"></div>
+				    		</div>
+				    		<div class="col-md-2">
+				    			<label for="suhu" class="control-label font-weight-bolder">Suhu</label>
+								<input type="text" class="form-control form-control-sm" name="suhu" id="suhu" placeholder="Suhu"  required>
+								<div class="invalid-feedback"></div>
+				    		</div>
+				    		<div class="col-md-2">
+				    			<label for="lingkar_kepala" class="control-label font-weight-bolder">Kepala</label>
+								<input type="text" class="form-control form-control-sm" name="lingkar_kepala" id="lingkar_kepala" placeholder="lingkar_kepala"  required>
+								<div class="invalid-feedback"></div>
+				    		</div>
+		    			</div>	
+		    		</div>
+		    		<div class="col-md-2">
+		    			<label for="keterangan" class="control-label font-weight-bolder">Keterangan</label>
+						<input type="text" class="form-control form-control-sm" name="keterangan" id="keterangan" placeholder="Keterangan" >
+						<div class="invalid-feedback"></div>
+		    		</div>
+		    	</div>
+		    	<div class="row d-flex justify-content-end">
+		    		<div class="col-md-2">
+		    			<label for="" class="control-label font-weight-bolder"></label>
+		    			<button class="form-control form-control-sm btn btn-warning btn-rounded btn-sm mt-2" id="btnResetQr">Reset</button>
+		    		</div>
+		    		<div class="col-md-2">
+		    			<label for="" class="control-label font-weight-bolder"></label>
+		    			<button type="submit" class="form-control form-control-sm btn btn-success btn-rounded btn-sm mt-2" name="save" id="btnSave">Simpan</button>
+		    		</div>
+		    	</div>
+	    	</form>
+	    	<hr>
+	    	<div class="row mx-2">
+		    	<div class="col-md-12">
+		    		<div class="table-responsive">
+			    		<table class="table" id="dataTable">
+			    			<thead>
+				    			<tr>
+				    				<th width="5%">No</th>
+				    				<th width="10%">Kode Transaksi</th>
+				    				<th width="10%">NIK</th>
+				    				<th width="10%">Nama Bayi</th>
+				    				<th width="1%">Tanggal</th>
+				    				<th width="5%">Tinggi</th>
+				    				<th width="5%">Suhu</th>
+				    				<th width="5%">Berat</th>
+				    				<th width="5%">Lingkar</th>
+				    				<th width="5%">Keterangan</th>
+				    				<th width="4%">Aksi</th>
+				    			</tr>
+			    			</thead>
+			    			<tbody>
+			    				<?php
+			                        foreach ($dataTable as $i => $dl){
+			                            $no = ($i + 1) + (($page - 1) * $dataPerPage);?>
+			                        <tr>
+			                            <td><?= $no++ ?></th>
+			                            <td><?= $dl['kode_transaksi'];?></td>
+			                            <td><?= $dl['bayi_nik'];?></td>
+			                            <td><?= $dl['nama'];?></td>
+			                            <td><?= $dl['tanggal_posyandu'] ;?></td>
+			                            <td><?= $dl['tinggi'];?></td>
+			                            <td><?= $dl['suhu'];?></td>
+			                            <td><?= $dl['berat'];?></td>
+			                            <td><?= $dl['lingkar_kepala'];?></td>
+			                            <td><?= $dl['keterangan'];?></td>
+			                           
+			                            <td>
+			                                <button type="button" data-id="<?= $dl['idTrans'];?>" class="btn text-danger pr-1 btnDelete"><i class="fa fa-trash"></i></button>
+			                            </td>
+			                        </tr>
+			                    <?php }   
+			                    ?>
+			    			</tbody>
+			    		</table>
+		    		
+		    		</div>
+		    		
+		    	</div>
+		    </div>
+	    </div>
+</div>
