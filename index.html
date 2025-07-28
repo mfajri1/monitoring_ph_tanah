@@ -183,12 +183,12 @@
 
       const pagination = document.createElement("div");
       pagination.className = "pagination";
-      const prevBtn = document.createElement("button");
       const nextBtn = document.createElement("button");
-      prevBtn.textContent = "Berikutnya";
+      const prevBtn = document.createElement("button");
       nextBtn.textContent = "Sebelumnya";
-      pagination.appendChild(prevBtn);
+      prevBtn.textContent = "Berikutnya";
       pagination.appendChild(nextBtn);
+      pagination.appendChild(prevBtn);
       box.appendChild(pagination);
 
       container.appendChild(box);
