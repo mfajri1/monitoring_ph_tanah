@@ -103,11 +103,10 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(reg => console.log('Service worker registered!', reg))
-      .catch(err => console.error('Service worker failed:', err));
+    navigator.serviceWorker.register('/service-worker.js');
   }
 </script>
+
 
 
   <script>
