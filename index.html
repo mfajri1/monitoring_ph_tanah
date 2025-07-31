@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <title>Monitoring Sensor</title>
-  <link rel="manifest" href="manifest.json" />
+  <link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#1e88e5" />
+
 
   <style>
     body {
@@ -86,6 +88,12 @@
       }
     }
   </style>
+
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js');
+  }
+</script>
 </head>
 <body>
 
@@ -101,11 +109,7 @@
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js');
-  }
-</script>
+  
 
 
 
