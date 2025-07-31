@@ -1,27 +1,22 @@
-const cacheName = 'sensor-cache-v1';
-const assets = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png',
-  'https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js',
-  'https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js'
-];
-
-self.addEventListener('install', e => {
+self.addEventListener("install", e => {
   e.waitUntil(
-    caches.open(cacheName).then(cache => {
-      return cache.addAll(assets);
+    caches.open("pwa-cache").then(cache => {
+      return cache.addAll([
+        "/",
+        "/index.html",
+        "/manifest.json",
+        "/assets/icon-192.png",
+        "/assets/icon-512.png",
+        // Tambahkan file lainnya yang ingin di-cache
+      ]);
     })
   );
 });
 
-self.addEventListener('fetch', e => {
+self.addEventListener("fetch", e => {
   e.respondWith(
-    caches.match(e.request).then(res => {
-      return res || fetch(e.request);
+    caches.match(e.request).then(response => {
+      return response || fetch(e.request);
     })
   );
 });
-
